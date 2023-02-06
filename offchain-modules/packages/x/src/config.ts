@@ -187,6 +187,7 @@ export interface monitorConfig {
   feeAccounts?: feeAccounts;
   verifierEndpoints?: verifierEndpoint[];
   gasPrice?: GasPriceConfig;
+  sleepTime?: number;
 }
 
 export interface AuditConfig {
