@@ -1,3 +1,9 @@
+## v0.0.39 (2023-02-09)
+
+### Bugs
+
+- [fix duplicate combination indexes](https://github.com/Magickbase/force-bridge/pull/9)
+
 ## v0.0.38 (2022-11-05)
 
 ### Bugs
