@@ -109,6 +109,7 @@ export class Monitor {
   private balanceProvider: BalanceProvider;
   private sudtDb: SudtDb;
   private kvDb: KVDb;
+  private sleepTime: number;
   webHookInfoUrl: string;
   webHookErrorUrl: string;
 
@@ -275,7 +276,7 @@ export class Monitor {
       }
       fromBlock = toBlock + 1;
       toBlock = fromBlock + 100;
-      await asyncSleep(10);
+      await asyncSleep(this.sleepTime);
     }
   }
 
@@ -283,6 +284,7 @@ export class Monitor {
     const conn = await getDBConnection();
     this.sudtDb = new SudtDb(conn);
     this.kvDb = new KVDb(conn);
+    this.sleepTime = ForceBridgeCore.config.monitor!.sleepTime ?? 1000;
     let durationConfig = readMonitorConfig();
     if (!durationConfig) {
       durationConfig = NewDurationCfg();
@@ -579,11 +581,11 @@ export class Monitor {
           })
           .subscribe((record) => this.onCkbBurnRecord(record));
 
-        await this.ckbRecordObservable.observeSudtRecord({ fromBlock, toBlock }).subscribe((records) => {
-          records.forEach((record) => {
-            void this.onSudtRecord(record);
-          });
-        });
+        // await this.ckbRecordObservable.observeSudtRecord({ fromBlock, toBlock }).subscribe((records) => {
+        //   records.forEach((record) => {
+        //     void this.onSudtRecord(record);
+        //   });
+        // });
 
         this.durationConfig.ckb.lastHandledBlock = toBlockNum;
       },
