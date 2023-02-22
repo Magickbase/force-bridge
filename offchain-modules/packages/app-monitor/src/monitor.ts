@@ -27,6 +27,9 @@ let step = 100;
 let expiredTime = 1200 * 1000;
 let expiredCheckInterval = 10 * 1000;
 
+let ckbEventRejectedInterval = 15000;
+let ckbEventResolvedInterval = 0;
+
 const ONE_HOUR = 60 * 60 * 1000;
 
 export interface VerifierStatus {
@@ -299,6 +302,12 @@ export class Monitor {
     }
     if (ForceBridgeCore.config.monitor!.expiredCheckInterval > 0) {
       expiredCheckInterval = ForceBridgeCore.config.monitor!.expiredCheckInterval;
+    }
+    if (ForceBridgeCore.config.monitor!.ckbEventRejectedInterval > 0) {
+      ckbEventRejectedInterval = ForceBridgeCore.config.monitor!.ckbEventRejectedInterval;
+    }
+    if (ForceBridgeCore.config.monitor!.ckbEventResolvedInterval > 0) {
+      ckbEventResolvedInterval = ForceBridgeCore.config.monitor!.ckbEventResolvedInterval;
     }
 
     this.durationConfig.ckb.sudtBillReconcBlock = parseInt(
@@ -590,8 +599,8 @@ export class Monitor {
         this.durationConfig.ckb.lastHandledBlock = toBlockNum;
       },
       {
-        onRejectedInterval: 15000,
-        onResolvedInterval: 0,
+        onRejectedInterval: ckbEventRejectedInterval,
+        onResolvedInterval: ckbEventResolvedInterval,
         onRejected: (e: Error) => {
           logger.error(`Monitor observeCkbLock error:${e.stack}`);
         },

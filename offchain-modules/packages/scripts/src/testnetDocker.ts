@@ -112,6 +112,8 @@ async function generateConfig(
     overmintCheckInterval: 3600000, //60 minutes
     scanStep: 100,
     env: 'testnet-docker',
+    ckbEventResolvedInterval: 15000,
+    ckbEventRejectedInterval: 0,
   };
   writeJsonToFile({ forceBridge: monitorConfig }, path.join(configPath, 'monitor/force_bridge.json'));
   // verifiers

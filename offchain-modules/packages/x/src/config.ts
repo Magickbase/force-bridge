@@ -188,6 +188,8 @@ export interface monitorConfig {
   verifierEndpoints?: verifierEndpoint[];
   gasPrice?: GasPriceConfig;
   sleepTime?: number;
+  ckbEventRejectedInterval: number;
+  ckbEventResolvedInterval: number;
 }
 
 export interface AuditConfig {
