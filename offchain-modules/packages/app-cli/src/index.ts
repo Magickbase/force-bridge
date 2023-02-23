@@ -12,7 +12,7 @@ import { sigCmd } from './sigServer';
 
 export const program = commander.program;
 
-const version = '0.0.39';
+const version = '0.0.40-beta';
 
 async function main() {
   program
