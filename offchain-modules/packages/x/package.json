@@ -1,6 +1,6 @@
 {
   "name": "@force-bridge/x",
-  "version": "0.0.39",
+  "version": "0.0.40-beta",
   "main": "./dist/index.js",
   "license": "MIT",
   "scripts": {

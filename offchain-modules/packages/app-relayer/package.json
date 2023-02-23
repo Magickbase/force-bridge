@@ -9,10 +9,10 @@
     "test": "yarn run build"
   },
   "dependencies": {
-    "@force-bridge/x": "^0.0.39"
+    "@force-bridge/x": "^0.0.40-beta"
   },
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.39"
+  "version": "0.0.40-beta"
 }
