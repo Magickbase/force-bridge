@@ -190,6 +190,8 @@ export interface monitorConfig {
   sleepTime?: number;
   ckbEventRejectedInterval: number;
   ckbEventResolvedInterval: number;
+  ethEventRejectedInterval: number;
+  ethEventResolvedInterval: number;
 }
 
 export interface AuditConfig {

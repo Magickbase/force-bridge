@@ -30,6 +30,9 @@ let expiredCheckInterval = 10 * 1000;
 let ckbEventRejectedInterval = 15000;
 let ckbEventResolvedInterval = 0;
 
+let ethEventRejectedInterval = 15000;
+let ethEventResolvedInterval = 1000;
+
 const ONE_HOUR = 60 * 60 * 1000;
 
 export interface VerifierStatus {
@@ -308,6 +311,12 @@ export class Monitor {
     }
     if (ForceBridgeCore.config.monitor!.ckbEventResolvedInterval > 0) {
       ckbEventResolvedInterval = ForceBridgeCore.config.monitor!.ckbEventResolvedInterval;
+    }
+    if (ForceBridgeCore.config.monitor!.ethEventRejectedInterval > 0) {
+      ethEventRejectedInterval = ForceBridgeCore.config.monitor!.ethEventRejectedInterval;
+    }
+    if (ForceBridgeCore.config.monitor!.ethEventResolvedInterval > 0) {
+      ethEventResolvedInterval = ForceBridgeCore.config.monitor!.ethEventResolvedInterval;
     }
 
     this.durationConfig.ckb.sudtBillReconcBlock = parseInt(
@@ -638,8 +647,8 @@ export class Monitor {
         continuousErrorCount = 0;
       },
       {
-        onRejectedInterval: 15000,
-        onResolvedInterval: 1000,
+        onRejectedInterval: ethEventRejectedInterval,
+        onResolvedInterval: ethEventResolvedInterval,
         onRejected: (e: Error) => {
           continuousErrorCount++;
           if (continuousErrorCount > 10) {

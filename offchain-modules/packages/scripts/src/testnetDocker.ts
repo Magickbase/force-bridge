@@ -114,6 +114,8 @@ async function generateConfig(
     env: 'testnet-docker',
     ckbEventResolvedInterval: 15000,
     ckbEventRejectedInterval: 0,
+    ethEventResolvedInterval: 15000,
+    ethEventRejectedInterval: 1000,
   };
   writeJsonToFile({ forceBridge: monitorConfig }, path.join(configPath, 'monitor/force_bridge.json'));
   // verifiers
