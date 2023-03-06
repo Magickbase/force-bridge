@@ -7,6 +7,7 @@ import { forceBridgeBotName } from './duration';
 export interface WebHookPayload {
   username: string;
   content?: string;
+  allowed_mentions?: unknown;
   embeds?: {
     title?: string;
     description?: string;
@@ -80,6 +81,7 @@ export class WebHook {
   error(): WebHook {
     this.checkEmbeds();
     this.payload.embeds![0].color = 16729149;
+    this.payload.allowed_mentions = { parse: ['everyone'] };
     return this;
   }
 
@@ -121,6 +123,13 @@ export async function sendWebHook(hookUrl: string, payload: WebHookPayload): Pro
     logger.warn(`sendWebHook failed, webHookUrl is empty`);
     return;
   }
+
+  const payloadMsg = {
+    content: `@everyone`,
+    allowed_mentions: payload.allowed_mentions,
+    embeds: payload.embeds,
+  };
+
   return retryPromise(
     async () => {
       await fetch(hookUrl, {
@@ -128,7 +137,7 @@ export async function sendWebHook(hookUrl: string, payload: WebHookPayload): Pro
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payloadMsg),
       });
     },
     {
