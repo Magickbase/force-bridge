@@ -14,7 +14,7 @@ import {
   XChainNetWork,
 } from './types/apiv1';
 
-const version = '0.0.40-beta';
+const version = '0.0.40-beta2';
 const forceBridgePath = '/force-bridge/api/v1';
 
 export async function startRpcServer(configPath: string): Promise<void> {
