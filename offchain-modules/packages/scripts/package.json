@@ -10,7 +10,7 @@
     "test": "yarn run build"
   },
   "dependencies": {
-    "@force-bridge/app-monitor": "^0.0.40-beta",
+    "@force-bridge/app-monitor": "^0.0.40-beta2",
     "@force-bridge/ckb-indexer-client": "^0.0.39",
     "@force-bridge/internal": "^0.0.39",
     "@force-bridge/keystore": "^0.0.39",
@@ -23,7 +23,7 @@
     "node-fetch": "^1.7.3",
     "shelljs": "^0.8.4"
   },
-  "version": "0.0.40-beta",
+  "version": "0.0.40-beta2",
   "devDependencies": {
     "@types/shelljs": "^0.8.9"
   }

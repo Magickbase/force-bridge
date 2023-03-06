@@ -1,5 +1,5 @@
 {
-  "version": "0.0.40-beta",
+  "version": "0.0.40-beta2",
   "workspaces": [
     "packages/*"
   ],

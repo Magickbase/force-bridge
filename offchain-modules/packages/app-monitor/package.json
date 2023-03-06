@@ -1,6 +1,6 @@
 {
   "name": "@force-bridge/app-monitor",
-  "version": "0.0.40-beta",
+  "version": "0.0.40-beta2",
   "main": "dist",
   "scripts": {
     "build": "yarn run clean && yarn run compile",
