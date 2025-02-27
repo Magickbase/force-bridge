@@ -121,9 +121,6 @@
       "pre-commit": "lint-staged"
     }
   },
-  "engines": {
-    "node": "14.x"
-  },
   "dependencies": {
     "ts-node": "10.9.2"
   }
