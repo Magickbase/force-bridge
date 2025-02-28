@@ -1,0 +1,60 @@
+name: Pull, build docker image and push to repository
+
+on:
+  push:
+    branches: [ "feature/citest" ]
+
+    secrets:
+      GHCR_USERNAME:
+        required: true
+      GHCR_TOKEN:
+        required: true
+    # inputs:
+    #   buildkey:
+    #     required: false
+    #     type: string
+    outputs:
+      # Image name
+      image-name:
+        description: URL for docker image
+        value: ${{ jobs.build.outputs.image-name }}
+      # Image tag (version)
+      image-tag:
+        description: image tag(version)
+        value: ${{ jobs.build.outputs.image-tag }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      image-name: "${{ steps.set-image-info.outputs.IMAGENAME  }}"
+      image-tag: "${{ steps.set-image-info.outputs.IMAGETAG  }}"
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set Image Name & Image Tag
+        id: set-image-info
+        run: |
+            # echo "IMAGETAG=$(git rev-parse --abbrev-ref HEAD)-$(git rev-parse --short=7 ${{ github.sha }})" >> $GITHUB_OUTPUT 
+            echo "IMAGENAME=force-bridge" >> $GITHUB_OUTPUT 
+            echo "IMAGEINFO=force-bridge:$(git rev-parse --abbrev-ref HEAD)-$(git rev-parse --short=7 ${{ github.sha }})" >> $GITHUB_ENV 
+            echo "IMAGETAG=test1"
+            
+            
+      - name: Docker login
+        run: docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build & Push image
+        id: build_push__image
+        run: |
+          docker build -t  ghcr.io/${{ secrets.GHCR_USERNAME }}/nervos/${IMAGEINFO}  -f  Dockerfile .
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/nervos/${IMAGEINFO}
+
+      - name: DeleteUselessImages
+        run: docker images && docker images| grep "nervos/force-bridge" | grep -v "IMAGE ID" | awk 'NR>1 {print $3}' | xargs -I {}  docker rmi {}
+
+      - name: CheckImage
+        run: docker images && df -hT && df -ih && echo ${{ steps.set-image-info.outputs.IMAGENAME  }}
