@@ -27,7 +27,7 @@ jobs:
         
         # 验证修改结果（调试用）
         echo "Modified Dockerfile:"
-        grep "VERSION=" Dockerfile
+        cat Dockerfile
 
     # 步骤3：登录 GitHub Container Registry
     - name: Login to GHCR
