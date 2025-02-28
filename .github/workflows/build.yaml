@@ -19,7 +19,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 步骤2：登录 GitHub Container Registry
+    # 步骤2：动态修改 Dockerfile
+    - name: Update Dockerfile version
+      run: |
+        # 使用 sed 替换 VERSION 定义
+        sed -i "s/VERSION/${{ env.IMAGE_TAG }}/" Dockerfile
+        
+        # 验证修改结果（调试用）
+        echo "Modified Dockerfile:"
+        grep "VERSION=" Dockerfile
+
+    # 步骤3：登录 GitHub Container Registry
     - name: Login to GHCR
       uses: docker/login-action@v3
       with:
@@ -27,7 +37,7 @@ jobs:
         username: ${{ secrets.GHCR_USERNAME }}  # 优先使用自定义用户名
         password: ${{ secrets.GHCR_TOKEN }}  # 需要创建名为 CR_PAT 的 secret
 
-    # 步骤3：构建并推送 Docker 镜像
+    # 步骤4：构建并推送 Docker 镜像
     - name: Build and Push
       uses: docker/build-push-action@v5
       with:
