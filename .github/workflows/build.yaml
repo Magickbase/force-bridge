@@ -6,7 +6,6 @@ on:
       - feature/citest
     tags:
       - 'v*'  # 可选：当推送版本标签时触发
-
 env:
   IMAGE_NAME: ghcr.io/magickbase/nervos/force-bridge
   IMAGE_TAG: 0.1.2
@@ -36,10 +35,7 @@ jobs:
         file: ./Dockerfile
         tags: |
           ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          # ${{ env.IMAGE_NAME }}:latest  # 可选：同时推送 latest 标签
         push: true
-        # cache-from: type=gha
-        # cache-to: type=gha,mode=max
 
     # 可选步骤：输出镜像信息
     - name: Show Image Info
