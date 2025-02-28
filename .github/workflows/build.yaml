@@ -36,7 +36,7 @@ jobs:
         file: ./Dockerfile
         tags: |
           ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          ${{ env.IMAGE_NAME }}:latest  # 可选：同时推送 latest 标签
+          # ${{ env.IMAGE_NAME }}:latest  # 可选：同时推送 latest 标签
         push: true
         # cache-from: type=gha
         # cache-to: type=gha,mode=max
