@@ -8,7 +8,7 @@ on:
       - 'v*'  # 可选：当推送版本标签时触发
 env:
   IMAGE_NAME: ghcr.io/magickbase/nervos/force-bridge
-  IMAGE_TAG: 0.1.7
+  IMAGE_TAG: 0.1.8
 
 jobs:
   build-and-push:
