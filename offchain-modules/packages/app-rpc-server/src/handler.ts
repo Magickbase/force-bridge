@@ -194,9 +194,55 @@ export class ForceBridgeAPIV1Handler implements API.ForceBridgeAPIV1 {
     );
     const burnTxSkeleton = await ckbTxGenerator.burn(fromLockscript, payload.recipient, asset, BigInt(amount));
 
+    const rawTransaction = transactionSkeletonToObject(burnTxSkeleton);
     return {
       network: 'Nervos',
-      rawTransaction: transactionSkeletonToObject(burnTxSkeleton),
+      rawTransaction: {
+        ...rawTransaction,
+        cellDeps: rawTransaction.cellDeps.map((cellDep) => ({
+          out_point: {
+            tx_hash: cellDep.outPoint.txHash,
+            index: cellDep.outPoint.index,
+          },
+          dep_type: cellDep.depType,
+        })),
+        inputs: rawTransaction.inputs.map((input) => ({
+          ...input,
+          out_point: input.outPoint ? {
+            tx_hash: input.outPoint.txHash,
+            index: input.outPoint.index,
+          } : undefined,
+          cell_output: {
+            ...input.cellOutput,
+            lock: {
+              code_hash: input.cellOutput.lock.codeHash,
+              hash_type: input.cellOutput.lock.hashType,
+              args: input.cellOutput.lock.args,
+            },
+            type: input.cellOutput.type ? {
+              code_hash: input.cellOutput.type?.codeHash,
+              hash_type: input.cellOutput.type?.hashType,
+              args: input.cellOutput.type?.args,
+            } : undefined,
+          },
+        })),
+        outputs: rawTransaction.outputs.map((output) => ({
+          ...output,
+          cell_output: {
+            ...output.cellOutput,
+            lock: {
+              code_hash: output.cellOutput.lock.codeHash,
+              hash_type: output.cellOutput.lock.hashType,
+              args: output.cellOutput.lock.args,
+            },
+            type: output.cellOutput.type ? {
+              code_hash: output.cellOutput.type?.codeHash,
+              hash_type: output.cellOutput.type?.hashType,
+              args: output.cellOutput.type?.args,
+            } : undefined,
+          }
+        })),
+      },
     };
   }
 

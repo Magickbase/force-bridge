@@ -56,6 +56,14 @@ export class CkbTxGenerator extends CkbTxHelper {
     depType: ForceBridgeCore.config.ckb.deps.bridgeLock.cellDep.depType,
   };
 
+  omniLockDep = {
+    outPoint: {
+      txHash: ForceBridgeCore.config.ckb.deps.omniLock!.cellDep.outPoint.txHash,
+      index: ForceBridgeCore.config.ckb.deps.omniLock!.cellDep.outPoint.index,
+    },
+    depType: ForceBridgeCore.config.ckb.deps.omniLock!.cellDep.depType,
+  };
+
   constructor(ckbRpcUrl: string, ckbIndexerUrl: string) {
     super(ckbRpcUrl, ckbIndexerUrl);
   }
@@ -344,8 +352,9 @@ export class CkbTxGenerator extends CkbTxHelper {
     }
     logger.debug('burn sudtCells: ', sudtCells);
     let txSkeleton = TransactionSkeleton({ cellProvider: this.indexer });
+    txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push(this.omniLockDep));
     for (const cell of sudtCells) {
-      txSkeleton = await common.setupInputCell(txSkeleton, cell);
+      txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(cell));
       txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.clear());
     }
 

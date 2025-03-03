@@ -1068,6 +1068,13 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
+"@force-bridge/ckb-indexer-client@0.0.46":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@force-bridge/ckb-indexer-client/-/ckb-indexer-client-0.0.43.tgz#0be0e707ab20486436132dc277dcdcc644839b9a"
+  integrity sha512-uMt8I7dalPQa6hxpRNKzVqmmxpvbrdWmDFZHX5yDQ3R5iZPr0O4wpldJGHHE9Hnl346D4b8YcPYbjV6d9cisLg==
+  dependencies:
+    axios "0.21.1"
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"

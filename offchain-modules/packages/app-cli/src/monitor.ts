@@ -1,4 +1,4 @@
-import { startMonitor } from '@force-bridge/app-monitor/dist/monitor';
+import { startMonitor } from '@force-bridge/app-monitor';
 import { nonNullable } from '@force-bridge/x';
 import commander from 'commander';
 
