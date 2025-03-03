@@ -22,6 +22,7 @@ import { SerializeRecipientCellData } from './generated/eth_recipient_cell';
 import { SerializeMintWitness } from './generated/mint_witness';
 import { SerializeRcLockWitnessLock } from './generated/omni_lock';
 import { getFromAddr, getMultisigLock, getOwnerTypeHash } from './multisig/multisig_helper';
+import { SECP256K1_BLAKE160 } from '@nervosnetwork/ckb-sdk-utils/lib/systemScripts';
 
 export interface MintAssetRecord {
   id: string;
@@ -353,6 +354,10 @@ export class CkbTxGenerator extends CkbTxHelper {
     logger.debug('burn sudtCells: ', sudtCells);
     let txSkeleton = TransactionSkeleton({ cellProvider: this.indexer });
     txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push(this.omniLockDep));
+    txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push({
+      outPoint: SECP256K1_BLAKE160.testnetOutPoint,
+      depType: 'code',
+    }));
     for (const cell of sudtCells) {
       txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(cell));
       txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.clear());
