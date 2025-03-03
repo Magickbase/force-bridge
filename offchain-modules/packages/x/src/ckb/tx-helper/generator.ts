@@ -356,7 +356,7 @@ export class CkbTxGenerator extends CkbTxHelper {
     txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push(this.omniLockDep));
     txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push({
       outPoint: SECP256K1_BLAKE160.testnetOutPoint,
-      depType: 'code',
+      depType: SECP256K1_BLAKE160.depType,
     }));
     for (const cell of sudtCells) {
       txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(cell));
