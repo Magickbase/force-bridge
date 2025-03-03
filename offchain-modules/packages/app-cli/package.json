@@ -1,7 +1,7 @@
 {
   "name": "@force-bridge/cli",
   "main": "dist",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "bin": {
     "forcecli": "./dist/index.js"
   },
@@ -16,7 +16,7 @@
     "@force-bridge/app-monitor": "0.1.7",
     "@force-bridge/app-multisign-server": "0.1.7",
     "@force-bridge/app-relayer": "0.1.7",
-    "@force-bridge/app-rpc-server": "0.1.9",
+    "@force-bridge/app-rpc-server": "0.1.10",
     "@force-bridge/keystore": "0.1.7",
     "@force-bridge/x": "0.1.9",
     "@nervosnetwork/ckb-sdk-core": "0.101.0",

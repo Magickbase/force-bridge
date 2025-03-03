@@ -204,7 +204,7 @@ export class ForceBridgeAPIV1Handler implements API.ForceBridgeAPIV1 {
             tx_hash: cellDep.outPoint.txHash,
             index: cellDep.outPoint.index,
           },
-          dep_type: cellDep.depType,
+          dep_type: cellDep.depType === 'code' ? 'code' : 'dep_group',
         })),
         inputs: rawTransaction.inputs.map((input) => ({
           ...input,
