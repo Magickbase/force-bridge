@@ -4,4 +4,4 @@ RUN  apt-get update;  apt-get install -y --no-install-recommends   ca-certificat
 
 COPY . /opt/
 
-RUN cd /opt/offchain-modules && yarn install && yarn build && yarn global add @force-bridge/cli@VERSION
+RUN yarn global add @force-bridge/cli@VERSION
