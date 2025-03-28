@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  bsc-verifier-01:
+    image: nervos/force-bridge:0.0.28
+    container_name: bsc-verifier-01
+    command: "forcecli verifier -cfg /data/force_bridge.json"
+    links:
+      - mysql:mysql
+    environment:
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: "123456"
+    ports:
+      - 8281:80
+    volumes:
+      - /data/bsc:/data
+    restart: always
+    depends_on:
+      - mysql
+
+  eth-verifier-01:
+    image: nervos/force-bridge:0.0.28
+    container_name: eth-verifier-01
+    command: "forcecli verifier -cfg /data/force_bridge.json"
+    links:
+      - mysql:mysql
+    environment:
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
+    ports:
+      - 8280:80
+    volumes:
+      - /data/eth:/data
+    restart: always
+    depends_on:
+      - mysql
+
+  mysql:
+    image: "mysql:5.7"
+    restart: always
+    container_name: mysql
+    volumes:
+      - /data/mysql-data-mainnet:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: Asia/Shanghai
+
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
