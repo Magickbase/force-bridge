@@ -9,6 +9,33 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Check for BSC configuration files
+if [ ! -f "./force_bridge_bsc.json" ] || [ ! -f "./keystore_bsc.json" ]; then
+    echo "Error: force_bridge_bsc.json or keystore_bsc.json not found in current directory"
+    exit 1
+fi
+
+# Check for ETH configuration files
+if [ ! -f "./force_bridge_eth.json" ] || [ ! -f "./keystore_eth.json" ]; then
+    echo "Error: force_bridge_eth.json or keystore_eth.json not found in current directory"
+    exit 1
+fi
+
+# Create directories
+mkdir -p /data/bsc
+mkdir -p /data/eth
+
+# Copy BSC files with renamed format
+cp "./force_bridge_bsc.json" "/data/bsc/force_bridge.json"
+cp "./keystore_bsc.json" "/data/bsc/keystore.json"
+
+# Copy ETH files with renamed format
+cp "./force_bridge_eth.json" "/data/eth/force_bridge.json"
+cp "./keystore_eth.json" "/data/eth/keystore.json"
+
+echo "Configuration files copied successfully to /data/bsc and /data/eth"
+
+
 # Set GitHub raw content link
 GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/v0.1.10/docker-compose.yml"
 DEPLOY_DIR="/opt/deploy"
