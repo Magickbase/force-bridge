@@ -1,12 +1,12 @@
 {
   "name": "@force-bridge/cli",
   "main": "dist",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "bin": {
     "forcecli": "./dist/index.js"
   },
   "scripts": {
-    "build": "yarn run clean && yarn run compile",
+    "build": "yarn run clean && node bundle.js",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "yarn run build",
@@ -18,14 +18,23 @@
     "@force-bridge/app-relayer": "0.1.7",
     "@force-bridge/app-rpc-server": "0.1.10",
     "@force-bridge/keystore": "0.1.7",
-    "@force-bridge/x": "0.1.9",
+    "@force-bridge/x": "0.1.11",
     "@nervosnetwork/ckb-sdk-core": "0.101.0",
     "commander": "8.1.0",
     "ethereumjs-util": "7.1.0",
     "ethers": "5.4.7",
-    "json-rpc-2.0": "0.2.18"
+    "json-rpc-2.0": "0.2.18",
+    "keccak": "^3.0.3",
+    "leveldown": "^6.1.1",
+    "secp256k1": "^4.0.3",
+    "snappy": "^7.2.2",
+    "sqlite3": "^5.1.6"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.1",
+    "ffmpeg-static": "^5.2.0"
   }
 }
