@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   bsc-verifier-01:
-    image: nervos/force-bridge:0.0.28
+    image: ghcr.io/magickbase/nervos/force-bridge:0.1.12
     container_name: bsc-verifier-01
     command: "forcecli verifier -cfg /data/force_bridge.json"
     links:
@@ -18,7 +18,7 @@ services:
       - mysql
 
   eth-verifier-01:
-    image: nervos/force-bridge:0.0.28
+    image: ghcr.io/magickbase/nervos/force-bridge:0.1.12
     container_name: eth-verifier-01
     command: "forcecli verifier -cfg /data/force_bridge.json"
     links:
