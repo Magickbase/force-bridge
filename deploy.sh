@@ -37,7 +37,7 @@ echo "Configuration files copied successfully to /data/bsc and /data/eth"
 
 
 # Set GitHub raw content link
-GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/v0.1.11/docker-compose.yml"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/v0.1.14/docker-compose.yml"
 DEPLOY_DIR="/opt/deploy"
 
 # Check if Docker is installed

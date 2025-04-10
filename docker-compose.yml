@@ -12,7 +12,7 @@ services:
     ports:
       - 8281:80
     volumes:
-      - /data/bsc:/data
+      - /force-bridge/bsc:/data
     restart: always
     depends_on:
       - mysql
@@ -28,7 +28,7 @@ services:
     ports:
       - 8280:80
     volumes:
-      - /data/eth:/data
+      - /force-bridge/eth:/data
     restart: always
     depends_on:
       - mysql
