@@ -2,13 +2,13 @@ version: "3.7"
 
 services:
   bsc-verifier-01:
-    image: ghcr.io/magickbase/nervos/force-bridge:0.1.12
+    image: darylmoe/force-bridge:latest
     container_name: bsc-verifier-01
     command: "forcecli verifier -cfg /data/force_bridge.json"
     links:
       - mysql:mysql
     environment:
-      FORCE_BRIDGE_KEYSTORE_PASSWORD: "123456"
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
     ports:
       - 8281:80
     volumes:
@@ -18,13 +18,13 @@ services:
       - mysql
 
   eth-verifier-01:
-    image: ghcr.io/magickbase/nervos/force-bridge:0.1.12
+    image: darylmoe/force-bridge:latest
     container_name: eth-verifier-01
     command: "forcecli verifier -cfg /data/force_bridge.json"
     links:
       - mysql:mysql
     environment:
-      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWOR}
     ports:
       - 8280:80
     volumes:
