@@ -24,7 +24,7 @@ services:
     links:
       - mysql:mysql
     environment:
-      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWOR}
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
     ports:
       - 8280:80
     volumes:
