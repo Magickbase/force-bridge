@@ -3,6 +3,10 @@
 # Exit on error
 set -e
 
+# Set default database names if not provided
+export BSC_DATABASE=${BSC_DATABASE:-bscverifier3}
+export GOERLI_DATABASE=${GOERLI_DATABASE:-goerliverifier3}
+
 # Check if running with root privileges
 if [ "$EUID" -ne 0 ]; then 
     echo "Please run this script with root privileges"
@@ -24,6 +28,13 @@ fi
 # Create directories
 mkdir -p /data/bsc
 mkdir -p /data/eth
+
+# Create init.sql if it doesn't exist
+if [ ! -f "./init.sql" ]; then
+    echo "Creating init.sql..."
+    echo "CREATE DATABASE IF NOT EXISTS ${BSC_DATABASE};" > "./init.sql"
+    echo "CREATE DATABASE IF NOT EXISTS ${GOERLI_DATABASE};" >> "./init.sql"
+fi
 
 # Copy BSC files with renamed format
 if [ -f "/data/bsc/force_bridge.json" ]; then
@@ -116,6 +127,9 @@ download_compose_file() {
         exit 1
     fi
     
+    # Copy init.sql to deployment directory
+    cp "./init.sql" "$DEPLOY_DIR/init.sql"
+    
     # Validate if file is valid YAML
     if ! docker-compose -f "$compose_file" config > /dev/null 2>&1; then
         echo "Error: Downloaded docker-compose.yml file is invalid"
@@ -148,7 +162,11 @@ update_compose_service() {
     echo "Starting services..."
     cd $DEPLOY_DIR
 
-    FORCE_BRIDGE_KEYSTORE_PASSWORD=${FORCE_BRIDGE_KEYSTORE_PASSWORD:-123456} MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root} docker-compose up -d
+    FORCE_BRIDGE_KEYSTORE_PASSWORD=${FORCE_BRIDGE_KEYSTORE_PASSWORD:-123456} \
+    MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root} \
+    BSC_DATABASE=${BSC_DATABASE} \
+    GOERLI_DATABASE=${GOERLI_DATABASE} \
+    docker-compose up -d
     
     echo "Service update complete"
 }
