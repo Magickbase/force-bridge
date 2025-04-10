@@ -141,6 +141,25 @@ download_compose_file() {
     fi
 }
 
+# Function to ensure databases exist
+ensure_databases() {
+    echo "Ensuring databases exist..."
+    
+    # Wait for MySQL to be ready
+    until docker exec mysql mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD:-root} --silent; do
+        echo "Waiting for MySQL to be ready..."
+        sleep 2
+    done
+    
+    # Create databases if they don't exist
+    docker exec mysql mysql -u root -p${MYSQL_ROOT_PASSWORD:-root} -e "
+        CREATE DATABASE IF NOT EXISTS ${BSC_DATABASE};
+        CREATE DATABASE IF NOT EXISTS ${GOERLI_DATABASE};
+    "
+    
+    echo "Databases check complete"
+}
+
 # Function to update docker-compose service
 update_compose_service() {
     local compose_file="$DEPLOY_DIR/docker-compose.yml"
@@ -167,6 +186,9 @@ update_compose_service() {
     BSC_DATABASE=${BSC_DATABASE} \
     GOERLI_DATABASE=${GOERLI_DATABASE} \
     docker-compose up -d
+    
+    # Ensure databases exist
+    ensure_databases
     
     echo "Service update complete"
 }
