@@ -26,11 +26,25 @@ mkdir -p /data/bsc
 mkdir -p /data/eth
 
 # Copy BSC files with renamed format
+if [ -f "/data/bsc/force_bridge.json" ]; then
+    rm -f "/data/bsc/force_bridge.json"
+fi
 cp "./force_bridge_bsc.json" "/data/bsc/force_bridge.json"
+
+if [ -f "/data/bsc/keystore.json" ]; then
+    rm -f "/data/bsc/keystore.json"
+fi
 cp "./keystore_bsc.json" "/data/bsc/keystore.json"
 
 # Copy ETH files with renamed format
+if [ -f "/data/eth/force_bridge.json" ]; then
+    rm -f "/data/eth/force_bridge.json"
+fi
 cp "./force_bridge_eth.json" "/data/eth/force_bridge.json"
+
+if [ -f "/data/eth/keystore.json" ]; then
+    rm -f "/data/eth/keystore.json"
+fi
 cp "./keystore_eth.json" "/data/eth/keystore.json"
 
 echo "Configuration files copied successfully to /data/bsc and /data/eth"
