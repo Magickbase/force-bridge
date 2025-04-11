@@ -66,7 +66,7 @@ GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest
 DEPLOY_DIR="/opt/deploy"
 
 # Check if Docker is installed
-if ! command -v docker &> /dev/null; then
+if ! command -v docker >/dev/null 2>&1; then
     echo "Docker not installed, starting installation..."
     
     # Install required packages
@@ -107,6 +107,28 @@ fi
 
 # Create deployment directory
 mkdir -p $DEPLOY_DIR
+
+# Log file for updates
+LOG_FILE="/var/log/force-bridge-update.log"
+
+# Function to log messages
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+# Function to setup auto-update
+setup_auto_update() {
+    local script_path=$(readlink -f "$0")
+    local cron_cmd="0 */6 * * * $script_path --auto-update >> $LOG_FILE 2>&1"
+    
+    # Check if crontab entry already exists
+    if ! crontab -l 2>/dev/null | grep -q "$script_path --auto-update"; then
+        (crontab -l 2>/dev/null; echo "$cron_cmd") | crontab -
+        log_message "Auto-update scheduled: Every 6 hours"
+    else
+        log_message "Auto-update already scheduled"
+    fi
+}
 
 # Function to download configuration file
 download_compose_file() {
@@ -193,8 +215,51 @@ update_compose_service() {
     echo "Service update complete"
 }
 
+# Function to check and update Docker images
+update_docker_images() {
+    local compose_file="$DEPLOY_DIR/docker-compose.yml"
+    log_message "Checking for Docker image updates..."
+    
+    # Pull latest images
+    cd $DEPLOY_DIR
+    docker-compose pull
+    
+    # Get current image hashes
+    local current_hashes=$(docker-compose images -q)
+    
+    # Pull new images
+    docker-compose pull
+    
+    # Get new image hashes
+    local new_hashes=$(docker-compose images -q)
+    
+    # Compare hashes to check if updates are available
+    if [ "$current_hashes" != "$new_hashes" ]; then
+        log_message "New Docker images detected, updating services..."
+        docker-compose down
+        docker-compose up -d
+        log_message "Services updated with new images"
+    else
+        log_message "No new Docker images available"
+    fi
+    
+    # Clean up old images
+    log_message "Cleaning up old Docker images..."
+    docker image prune -f
+}
+
 # Main process
-echo "Starting deployment update..."
-download_compose_file
-update_compose_service
-echo "Deployment script execution complete" 
+if [ "$1" = "--auto-update" ]; then
+    log_message "Starting automatic update..."
+    download_compose_file
+    update_compose_service
+    update_docker_images
+    log_message "Automatic update completed"
+else
+    echo "Starting deployment update..."
+    download_compose_file
+    update_compose_service
+    update_docker_images
+    setup_auto_update
+    echo "Deployment script execution complete"
+fi 
