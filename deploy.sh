@@ -119,7 +119,7 @@ log_message() {
 # Function to setup auto-update
 setup_auto_update() {
     local script_path=$(readlink -f "$0")
-    local cron_cmd="0 */6 * * * $script_path --auto-update >> $LOG_FILE 2>&1"
+    local cron_cmd="*/5 * * * * $script_path --auto-update >> $LOG_FILE 2>&1"
     
     # Check if crontab entry already exists
     if ! crontab -l 2>/dev/null | grep -q "$script_path --auto-update"; then
