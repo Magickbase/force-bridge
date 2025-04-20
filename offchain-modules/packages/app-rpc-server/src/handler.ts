@@ -12,7 +12,7 @@ import { IQuery, LockRecord, UnlockRecord } from '@force-bridge/x/dist/db/model'
 import { stringToUint8Array } from '@force-bridge/x/dist/utils';
 import { logger } from '@force-bridge/x/dist/utils/logger';
 import { IBalance } from '@force-bridge/x/dist/xchain/btc';
-import { abi } from '@force-bridge/x/dist/xchain/eth/abi/ForceBridge.json';
+import { ForceBridgeAbi } from '@force-bridge/x/dist/xchain/eth/abi';
 import { checkLock } from '@force-bridge/x/dist/xchain/eth/check';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
@@ -70,7 +70,7 @@ export class ForceBridgeAPIV1Handler implements API.ForceBridgeAPIV1 {
     };
     this.provider = new ethers.providers.JsonRpcProvider(connectionInfo);
     const bridgeContractAddr = ForceBridgeCore.config.eth.contractAddress;
-    this.bridge = new ethers.Contract(bridgeContractAddr, abi, this.provider);
+    this.bridge = new ethers.Contract(bridgeContractAddr, ForceBridgeAbi.abi, this.provider);
   }
 
   async generateBridgeInNervosTransaction<T extends NetworkTypes>(

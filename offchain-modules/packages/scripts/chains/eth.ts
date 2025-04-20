@@ -18,7 +18,7 @@ import {
 } from '@force-bridge/x/dist/utils';
 import { logger } from '@force-bridge/x/dist/utils/logger';
 import { ETH_ADDRESS } from '@force-bridge/x/dist/xchain/eth';
-import { abi } from '@force-bridge/x/dist/xchain/eth/abi/ForceBridge.json';
+import { ForceBridgeAbi } from '@force-bridge/x/dist/xchain/eth/abi';
 import { ForceBridgeContract, reconc } from '@force-bridge/xchain-eth';
 import CKB from '@nervosnetwork/ckb-sdk-core';
 import { ethers } from 'ethers';
@@ -48,10 +48,10 @@ async function main() {
 
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
   const bridgeContractAddr = config.contractAddress;
-  const bridge = new ethers.Contract(bridgeContractAddr, abi, provider) as ForceBridgeContract;
+  const bridge = new ethers.Contract(bridgeContractAddr, ForceBridgeAbi.abi, provider) as ForceBridgeContract;
   const wallet = new ethers.Wallet(ETH_PRI_KEY, provider);
   const bridgeWithSigner = bridge.connect(wallet);
-  const iface = new ethers.utils.Interface(abi);
+  const iface = new ethers.utils.Interface(ForceBridgeAbi.abi);
 
   const bridgeFee = ForceBridgeCore.config.eth.assetWhiteList.filter((asset) => asset.symbol === 'ETH')[0].bridgeFee;
   logger.info('bridge fee', bridgeFee);

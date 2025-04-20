@@ -9,6 +9,10 @@ export const rpcCmd = new commander.Command('rpc')
   .action(rpc);
 
 async function rpc(opts: Record<string, string>) {
-  const configPath = nonNullable(opts.config || defaultConfig);
-  await startRpcServer(configPath);
+  try {
+    const configPath = nonNullable(opts.config || defaultConfig);
+    await startRpcServer(configPath);
+  } catch (e) {
+    console.error(e);
+  }
 }

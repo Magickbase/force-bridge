@@ -7,7 +7,7 @@ import { nonNullable } from '../../errors';
 import { MultiSigMgr } from '../../multisig/multisig-mgr';
 import { asyncSleep, retryPromise } from '../../utils';
 import { logger } from '../../utils/logger';
-import { abi } from './abi/ForceBridge.json';
+import { ForceBridgeAbi } from './abi';
 import { buildSigRawData } from './utils';
 
 export type Log = Parameters<Interface['parseLog']>[0] & {
@@ -51,11 +51,11 @@ export class EthChain {
     };
     this.provider = new ethers.providers.JsonRpcProvider(connectionInfo);
     this.bridgeContractAddr = config.contractAddress;
-    this.iface = new ethers.utils.Interface(abi);
+    this.iface = new ethers.utils.Interface(ForceBridgeAbi.abi);
     if (role === 'collector') {
       this.wallet = new ethers.Wallet(config.privateKey, this.provider);
       logger.debug('address', this.wallet.address);
-      this.bridge = new ethers.Contract(this.bridgeContractAddr, abi, this.provider).connect(this.wallet);
+      this.bridge = new ethers.Contract(this.bridgeContractAddr, ForceBridgeAbi.abi, this.provider).connect(this.wallet);
       this.multisigMgr = new MultiSigMgr('ETH', this.config.multiSignHosts, this.config.multiSignThreshold);
     }
   }
@@ -292,7 +292,7 @@ export class EthChain {
   }
 
   public async getUnlockMessageToSign(records: EthUnlockRecord[]): Promise<string> {
-    const bridge = new ethers.Contract(this.bridgeContractAddr, abi, this.provider);
+    const bridge = new ethers.Contract(this.bridgeContractAddr, ForceBridgeAbi.abi, this.provider);
     const domainSeparator = await bridge.DOMAIN_SEPARATOR();
     const typeHash = await bridge.UNLOCK_TYPEHASH();
     const nonce: BigNumber = await bridge.latestUnlockNonce_();

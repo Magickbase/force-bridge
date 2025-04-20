@@ -9,6 +9,10 @@ export const sigCmd = new commander.Command('verifier')
   .action(sigServer);
 
 async function sigServer(opts: Record<string, string>) {
+  try {
   const configPath = nonNullable(opts.config || defaultConfig);
   await startSigServer(configPath);
+  } catch (e) {
+    console.log(e)
+  }
 }

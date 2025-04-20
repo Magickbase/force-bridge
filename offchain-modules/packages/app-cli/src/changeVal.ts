@@ -21,7 +21,7 @@ import { MultisigItem } from '@force-bridge/x/dist/config';
 import { httpRequest } from '@force-bridge/x/dist/multisig/client';
 import { privateKeyToCkbPubkeyHash, writeJsonToFile } from '@force-bridge/x/dist/utils';
 import { buildChangeValidatorsSigRawData } from '@force-bridge/x/dist/xchain/eth';
-import { abi } from '@force-bridge/x/dist/xchain/eth/abi/ForceBridge.json';
+import { ForceBridgeAbi } from '@force-bridge/x/dist/xchain/eth/abi';
 import commander from 'commander';
 import { ecsign, toRpcSig } from 'ethereumjs-util';
 import { BigNumber, ethers } from 'ethers';
@@ -409,7 +409,7 @@ export class EthChangeValClient {
   constructor(url: string, contractAddress: string, privateKey: string) {
     this.provider = new ethers.providers.JsonRpcProvider(url);
     this.wallet = new ethers.Wallet(privateKey, this.provider);
-    this.bridge = new ethers.Contract(contractAddress, abi, this.provider).connect(this.wallet);
+    this.bridge = new ethers.Contract(contractAddress, ForceBridgeAbi.abi, this.provider).connect(this.wallet);
   }
 }
 

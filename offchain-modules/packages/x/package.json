@@ -1,11 +1,12 @@
 {
   "name": "@force-bridge/x",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "main": "./dist/index.js",
   "license": "MIT",
   "scripts": {
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
+    "generate-abi": "node ./inline-json.js",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "yarn run build",
     "test": "yarn run build"

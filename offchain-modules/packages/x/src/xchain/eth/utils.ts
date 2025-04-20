@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { logger } from '../../utils/logger';
-import { abi, bytecode } from './abi/ForceBridge.json';
+import { ForceBridgeAbi } from './abi';
 
 export async function deployEthContract(
   rpcUrl: string,
@@ -10,7 +10,7 @@ export async function deployEthContract(
 ): Promise<string> {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   const wallet = new ethers.Wallet(ethPrivateKey, provider);
-  const bridgeFactory = new ethers.ContractFactory(abi, bytecode, wallet);
+  const bridgeFactory = new ethers.ContractFactory(ForceBridgeAbi.abi, ForceBridgeAbi.bytecode, wallet);
   const bridgeContract = await bridgeFactory.deploy(validators, multiSignThreshold);
 
   const receipt = await bridgeContract.deployTransaction.wait();

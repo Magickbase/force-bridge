@@ -355,7 +355,8 @@ export class CkbTxGenerator extends CkbTxHelper {
     let txSkeleton = TransactionSkeleton({ cellProvider: this.indexer });
     txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push(this.omniLockDep));
     txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push({
-      outPoint: SECP256K1_BLAKE160.testnetOutPoint,
+      outPoint: ForceBridgeCore.config.common.network === 'testnet' ? 
+        SECP256K1_BLAKE160.testnetOutPoint : SECP256K1_BLAKE160.mainnetOutPoint,
       depType: SECP256K1_BLAKE160.depType,
     }));
     for (const cell of sudtCells) {

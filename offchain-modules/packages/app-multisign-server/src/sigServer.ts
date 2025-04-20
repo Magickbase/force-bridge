@@ -8,7 +8,7 @@ import { collectSignaturesParams, getPendingTxParams } from '@force-bridge/x/dis
 import { ServerSingleton } from '@force-bridge/x/dist/server/serverSingleton';
 import { getDBConnection, privateKeyToCkbAddress, privateKeyToEthAddress } from '@force-bridge/x/dist/utils';
 import { logger } from '@force-bridge/x/dist/utils/logger';
-import { abi } from '@force-bridge/x/dist/xchain/eth/abi/ForceBridge.json';
+import { ForceBridgeAbi } from '@force-bridge/x/dist/xchain/eth/abi';
 import bodyParser from 'body-parser';
 import { ethers } from 'ethers';
 import { JSONRPCServer } from 'json-rpc-2.0';
@@ -66,10 +66,10 @@ export class SigServer {
       timeout: 3000,
     };
     SigServer.ethProvider = new ethers.providers.JsonRpcProvider(connectionInfo);
-    SigServer.ethInterface = new ethers.utils.Interface(abi);
+    SigServer.ethInterface = new ethers.utils.Interface(ForceBridgeAbi.abi);
     SigServer.ethBridgeContract = new ethers.Contract(
       ForceBridgeCore.config.eth.contractAddress,
-      abi,
+      ForceBridgeAbi.abi,
       SigServer.ethProvider,
     );
     SigServer.conn = conn;
