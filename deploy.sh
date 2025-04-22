@@ -150,7 +150,7 @@ download_compose_file() {
     fi
     
     # Copy init.sql to deployment directory
-    cp "./init.sql" "$DEPLOY_DIR/init.sql"
+    cp "./init.sql" "/data/init.sql"
     
     # Validate if file is valid YAML
     if ! docker-compose -f "$compose_file" config > /dev/null 2>&1; then

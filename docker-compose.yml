@@ -39,11 +39,11 @@ services:
     container_name: mysql
     volumes:
       - /data/mysql-data-mainnet:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /data/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      BSC_DATABASE: ${BSC_DATABASE:-bscverifier3}
-      GOERLI_DATABASE: ${GOERLI_DATABASE:-goerliverifier3}
+      BSC_DATABASE: ${BSC_DATABASE:-bscverifier
+      GOERLI_DATABASE: ${GOERLI_DATABASE:-verifier}
