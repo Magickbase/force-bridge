@@ -221,7 +221,9 @@ update_compose_service() {
     docker-compose up -d
     
     # Ensure databases exist
-    ensure_databases
+    if [ "$USE_DB_COMPOSE" = true ]; then
+        ensure_databases
+    fi
     
     echo "Service update complete"
 }
