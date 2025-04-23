@@ -163,9 +163,6 @@ download_compose_file() {
         exit 1
     fi
     
-    # Copy init.sql to deployment directory
-    cp "./init.sql" "/root/init.sql"
-    
     # Validate if file is valid YAML
     if ! docker-compose -f "$COMPOSE_FILE" config > /dev/null 2>&1; then
         echo "Error: Downloaded docker-compose.yml file is invalid"
