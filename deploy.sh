@@ -26,8 +26,8 @@ if [ ! -f "./force_bridge_eth.json" ] || [ ! -f "./keystore_eth.json" ]; then
 fi
 
 # Create directories
-mkdir -p /data/bsc
-mkdir -p /data/eth
+mkdir -p /root/bsc
+mkdir -p /root/eth
 
 # Create init.sql if it doesn't exist
 if [ ! -f "./init.sql" ]; then
@@ -37,28 +37,28 @@ if [ ! -f "./init.sql" ]; then
 fi
 
 # Copy BSC files with renamed format
-if [ -f "/data/bsc/force_bridge.json" ]; then
-    rm -f "/data/bsc/force_bridge.json"
+if [ -f "/root/bsc/force_bridge.json" ]; then
+    rm -f "/root/bsc/force_bridge.json"
 fi
-cp "./force_bridge_bsc.json" "/data/bsc/force_bridge.json"
+cp "./force_bridge_bsc.json" "/root/bsc/force_bridge.json"
 
-if [ -f "/data/bsc/keystore.json" ]; then
-    rm -f "/data/bsc/keystore.json"
+if [ -f "/root/bsc/keystore.json" ]; then
+    rm -f "/root/bsc/keystore.json"
 fi
-cp "./keystore_bsc.json" "/data/bsc/keystore.json"
+cp "./keystore_bsc.json" "/root/bsc/keystore.json"
 
 # Copy ETH files with renamed format
-if [ -f "/data/eth/force_bridge.json" ]; then
-    rm -f "/data/eth/force_bridge.json"
+if [ -f "/root/eth/force_bridge.json" ]; then
+    rm -f "/root/eth/force_bridge.json"
 fi
-cp "./force_bridge_eth.json" "/data/eth/force_bridge.json"
+cp "./force_bridge_eth.json" "/root/eth/force_bridge.json"
 
-if [ -f "/data/eth/keystore.json" ]; then
-    rm -f "/data/eth/keystore.json"
+if [ -f "/root/eth/keystore.json" ]; then
+    rm -f "/root/eth/keystore.json"
 fi
-cp "./keystore_eth.json" "/data/eth/keystore.json"
+cp "./keystore_eth.json" "/root/eth/keystore.json"
 
-echo "Configuration files copied successfully to /data/bsc and /data/eth"
+echo "Configuration files copied successfully to /root/bsc and /root/eth"
 
 
 # Set GitHub raw content link
@@ -164,7 +164,7 @@ download_compose_file() {
     fi
     
     # Copy init.sql to deployment directory
-    cp "./init.sql" "/data/init.sql"
+    cp "./init.sql" "/root/init.sql"
     
     # Validate if file is valid YAML
     if ! docker-compose -f "$COMPOSE_FILE" config > /dev/null 2>&1; then
