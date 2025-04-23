@@ -4,8 +4,8 @@
 set -e
 
 # Set default database names if not provided
-export BSC_DATABASE=${BSC_DATABASE:-bscverifier3}
-export GOERLI_DATABASE=${GOERLI_DATABASE:-goerliverifier3}
+export BSC_DATABASE=${BSC_DATABASE:-bscverifier}
+export GOERLI_DATABASE=${GOERLI_DATABASE:-verifier}
 
 # Check if running with root privileges
 if [ "$EUID" -ne 0 ]; then 
