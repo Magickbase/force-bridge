@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  bsc-verifier-01:
+    image: darylmoe/force-bridge:latest
+    container_name: bsc-verifier-01
+    command: "forcecli verifier -cfg /data/force_bridge.json"
+    environment:
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
+    ports:
+      - 8281:80
+    volumes:
+      - /data/bsc:/data
+    restart: always
+
+  eth-verifier-01:
+    image: darylmoe/force-bridge:latest
+    container_name: eth-verifier-01
+    command: "forcecli verifier -cfg /data/force_bridge.json"
+    environment:
+      FORCE_BRIDGE_KEYSTORE_PASSWORD: ${FORCE_BRIDGE_KEYSTORE_PASSWORD}
+    ports:
+      - 8280:80
+    volumes:
+      - /data/eth:/data
+    restart: always

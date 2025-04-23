@@ -62,7 +62,6 @@ echo "Configuration files copied successfully to /data/bsc and /data/eth"
 
 
 # Set GitHub raw content link
-GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
 DEPLOY_DIR="/opt/deploy"
 
 # Check if Docker is installed
@@ -130,19 +129,34 @@ setup_auto_update() {
     fi
 }
 
+# Check for a specific parameter to decide which docker-compose file to use
+USE_DB_COMPOSE=true
+for arg in "$@"; do
+    if [ "$arg" = "--no-db" ]; then
+        USE_DB_COMPOSE=false
+        break
+    fi
+done
+
+# Set the docker-compose file based on the parameter
+if [ "$USE_DB_COMPOSE" = true ]; then
+    COMPOSE_FILE="$DEPLOY_DIR/docker-compose.yml"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
+else
+    COMPOSE_FILE="$DEPLOY_DIR/docker-compose-without-db.yml"
+    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose-without-db.yml"
+
 # Function to download configuration file
 download_compose_file() {
-    local compose_file="$DEPLOY_DIR/docker-compose.yml"
-    
     echo "Starting configuration file download..."
     
     # If old config exists, create backup
-    if [ -f "$compose_file" ]; then
-        cp "$compose_file" "${compose_file}.backup.$(date +%Y%m%d_%H%M%S)"
+    if [ -f "$COMPOSE_FILE" ]; then
+        cp "$COMPOSE_FILE" "${COMPOSE_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
     fi
     
     # Download new config file
-    if curl -sSL "$GITHUB_RAW_URL" -o "$compose_file"; then
+    if curl -sSL "$GITHUB_RAW_URL" -o "$COMPOSE_FILE"; then
         echo "Configuration file download complete"
     else
         echo "Error: Configuration file download failed"
@@ -153,10 +167,10 @@ download_compose_file() {
     cp "./init.sql" "/data/init.sql"
     
     # Validate if file is valid YAML
-    if ! docker-compose -f "$compose_file" config > /dev/null 2>&1; then
+    if ! docker-compose -f "$COMPOSE_FILE" config > /dev/null 2>&1; then
         echo "Error: Downloaded docker-compose.yml file is invalid"
-        if [ -f "${compose_file}.backup.$(date +%Y%m%d_%H%M%S)" ]; then
-            mv "${compose_file}.backup.$(date +%Y%m%d_%H%M%S)" "$compose_file"
+        if [ -f "${COMPOSE_FILE}.backup.$(date +%Y%m%d_%H%M%S)" ]; then
+            mv "${COMPOSE_FILE}.backup.$(date +%Y%m%d_%H%M%S)" "$COMPOSE_FILE"
             echo "Backup file restored"
         fi
         exit 1
