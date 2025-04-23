@@ -141,10 +141,11 @@ done
 # Set the docker-compose file based on the parameter
 if [ "$USE_DB_COMPOSE" = true ]; then
     COMPOSE_FILE="$DEPLOY_DIR/docker-compose.yml"
-GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
+    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
 else
     COMPOSE_FILE="$DEPLOY_DIR/docker-compose-without-db.yml"
     GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose-without-db.yml"
+fi
 
 # Function to download configuration file
 download_compose_file() {
