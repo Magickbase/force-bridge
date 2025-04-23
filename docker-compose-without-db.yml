@@ -10,7 +10,7 @@ services:
     ports:
       - 8281:80
     volumes:
-      - /data/bsc:/data
+      - /root/bsc:/data
     restart: always
 
   eth-verifier-01:
@@ -22,5 +22,5 @@ services:
     ports:
       - 8280:80
     volumes:
-      - /data/eth:/data
+      - /root/eth:/data
     restart: always
