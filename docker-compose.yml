@@ -45,5 +45,5 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      BSC_DATABASE: ${BSC_DATABASE:-bscverifier
+      BSC_DATABASE: ${BSC_DATABASE:-bscverifier}
       GOERLI_DATABASE: ${GOERLI_DATABASE:-verifier}
