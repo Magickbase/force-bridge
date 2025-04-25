@@ -7,59 +7,72 @@ set -e
 export BSC_DATABASE=${BSC_DATABASE:-bscverifier}
 export GOERLI_DATABASE=${GOERLI_DATABASE:-verifier}
 
+USE_DB_COMPOSE=true
+UPDATE=false
+for arg in "$@"; do
+    if [ "$arg" = "--no-db" ]; then
+        USE_DB_COMPOSE=false
+    fi
+
+    if [ "$arg" = "--update" ]; then
+        UPDATE=true
+    fi
+done
+
+if [ "$UPDATE" = false ]; then
 # Check if running with root privileges
-if [ "$EUID" -ne 0 ]; then 
-    echo "Please run this script with root privileges"
-    exit 1
+    if [ "$EUID" -ne 0 ]; then 
+        echo "Please run this script with root privileges"
+        exit 1
+    fi
+
+    # Check for BSC configuration files
+    if [ ! -f "./force_bridge_bsc.json" ] || [ ! -f "./keystore_bsc.json" ]; then
+        echo "Error: force_bridge_bsc.json or keystore_bsc.json not found in current directory"
+        exit 1
+    fi
+
+    # Check for ETH configuration files
+    if [ ! -f "./force_bridge_eth.json" ] || [ ! -f "./keystore_eth.json" ]; then
+        echo "Error: force_bridge_eth.json or keystore_eth.json not found in current directory"
+        exit 1
+    fi
+
+    # Create directories
+    mkdir -p /root/bsc
+    mkdir -p /root/eth
+
+    # Create init.sql if it doesn't exist
+    if [ ! -f "./init.sql" ]; then
+        echo "Creating init.sql..."
+        echo "CREATE DATABASE IF NOT EXISTS ${BSC_DATABASE};" > "./init.sql"
+        echo "CREATE DATABASE IF NOT EXISTS ${GOERLI_DATABASE};" >> "./init.sql"
+    fi
+
+    # Copy BSC files with renamed format
+    if [ -f "/root/bsc/force_bridge.json" ]; then
+        rm -f "/root/bsc/force_bridge.json"
+    fi
+    cp "./force_bridge_bsc.json" "/root/bsc/force_bridge.json"
+
+    if [ -f "/root/bsc/keystore.json" ]; then
+        rm -f "/root/bsc/keystore.json"
+    fi
+    cp "./keystore_bsc.json" "/root/bsc/keystore.json"
+
+    # Copy ETH files with renamed format
+    if [ -f "/root/eth/force_bridge.json" ]; then
+        rm -f "/root/eth/force_bridge.json"
+    fi
+    cp "./force_bridge_eth.json" "/root/eth/force_bridge.json"
+
+    if [ -f "/root/eth/keystore.json" ]; then
+        rm -f "/root/eth/keystore.json"
+    fi
+    cp "./keystore_eth.json" "/root/eth/keystore.json"
+
+    echo "Configuration files copied successfully to /root/bsc and /root/eth"
 fi
-
-# Check for BSC configuration files
-if [ ! -f "./force_bridge_bsc.json" ] || [ ! -f "./keystore_bsc.json" ]; then
-    echo "Error: force_bridge_bsc.json or keystore_bsc.json not found in current directory"
-    exit 1
-fi
-
-# Check for ETH configuration files
-if [ ! -f "./force_bridge_eth.json" ] || [ ! -f "./keystore_eth.json" ]; then
-    echo "Error: force_bridge_eth.json or keystore_eth.json not found in current directory"
-    exit 1
-fi
-
-# Create directories
-mkdir -p /root/bsc
-mkdir -p /root/eth
-
-# Create init.sql if it doesn't exist
-if [ ! -f "./init.sql" ]; then
-    echo "Creating init.sql..."
-    echo "CREATE DATABASE IF NOT EXISTS ${BSC_DATABASE};" > "./init.sql"
-    echo "CREATE DATABASE IF NOT EXISTS ${GOERLI_DATABASE};" >> "./init.sql"
-fi
-
-# Copy BSC files with renamed format
-if [ -f "/root/bsc/force_bridge.json" ]; then
-    rm -f "/root/bsc/force_bridge.json"
-fi
-cp "./force_bridge_bsc.json" "/root/bsc/force_bridge.json"
-
-if [ -f "/root/bsc/keystore.json" ]; then
-    rm -f "/root/bsc/keystore.json"
-fi
-cp "./keystore_bsc.json" "/root/bsc/keystore.json"
-
-# Copy ETH files with renamed format
-if [ -f "/root/eth/force_bridge.json" ]; then
-    rm -f "/root/eth/force_bridge.json"
-fi
-cp "./force_bridge_eth.json" "/root/eth/force_bridge.json"
-
-if [ -f "/root/eth/keystore.json" ]; then
-    rm -f "/root/eth/keystore.json"
-fi
-cp "./keystore_eth.json" "/root/eth/keystore.json"
-
-echo "Configuration files copied successfully to /root/bsc and /root/eth"
-
 
 # Set GitHub raw content link
 DEPLOY_DIR="/opt/deploy"
@@ -114,42 +127,6 @@ LOG_FILE="/var/log/force-bridge-update.log"
 log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
-
-# Function to setup auto-update
-setup_auto_update() {
-    local script_path=$(readlink -f "$0")
-    local cron_cmd="curl -sSL https://raw.githubusercontent.com/Magickbase/force-bridge/latest/deploy.sh | FORCE_BRIDGE_KEYSTORE_PASSWORD=$FORCE_BRIDGE_KEYSTORE_PASSWORD MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh"
-    if [ "$USE_DB_COMPOSE" = true ]; then
-        local cron_cmd="*/5 * * * * $script_path >> $LOG_FILE 2>&1"
-    else
-        local cron_cmd="*/5 * * * * $script_path -s -- --no-db >> $LOG_FILE 2>&1"
-    fi
-    
-    # Check if crontab entry already exists
-    if ! crontab -l 2>/dev/null | grep -q "$script_path --auto-update"; then
-        (crontab -l 2>/dev/null; echo "$cron_cmd") | crontab -
-        log_message "Auto-update scheduled: Every 6 hours"
-    else
-        log_message "Auto-update already scheduled"
-    fi
-}
-
-# Check for a specific parameter to decide which docker-compose file to use
-USE_DB_COMPOSE=true
-for arg in "$@"; do
-    if [ "$arg" = "--no-db" ]; then
-        USE_DB_COMPOSE=false
-        break
-    fi
-done
-
-COMPOSE_FILE="$DEPLOY_DIR/docker-compose.yml"
-# Set the docker-compose file based on the parameter
-if [ "$USE_DB_COMPOSE" = true ]; then
-    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
-else
-    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose-without-db.yml"
-fi
 
 # Function to download configuration file
 download_compose_file() {
@@ -252,32 +229,36 @@ update_docker_images() {
     local new_hashes=$(docker-compose images -q)
     
     # Compare hashes to check if updates are available
-    if [ "$current_hashes" != "$new_hashes" ]; then
-        log_message "New Docker images detected, updating services..."
-        docker-compose down
-        docker-compose up -d
-        log_message "Services updated with new images"
-    else
+    if [ "$current_hashes" == "$new_hashes" ]; then
         log_message "No new Docker images available"
+        return 1
     fi
     
     # Clean up old images
     log_message "Cleaning up old Docker images..."
-    docker image prune -f
+    docker image prune -a
 }
 
-# Main process
-if [ "$1" = "--auto-update" ]; then
-    log_message "Starting automatic update..."
-    download_compose_file
-    update_compose_service
-    update_docker_images
-    log_message "Automatic update completed"
+COMPOSE_FILE="$DEPLOY_DIR/docker-compose.yml"
+# Set the docker-compose file based on the parameter
+if [ "$USE_DB_COMPOSE" = true ]; then
+    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose.yml"
 else
-    echo "Starting deployment update..."
-    download_compose_file
+    GITHUB_RAW_URL="https://raw.githubusercontent.com/Magickbase/force-bridge/latest/docker-compose-without-db.yml"
+fi
+
+echo "Starting deployment update..."
+# Clear all crontab tasks
+echo "Clearing all crontab tasks..."
+crontab -r || echo "No existing crontab found or unable to remove"
+echo "Crontab tasks cleared"
+
+download_compose_file
+if update_docker_images; then
+    echo "Docker image updates available, updating service"
     update_compose_service
-    update_docker_images
-    setup_auto_update
-    echo "Deployment script execution complete"
-fi 
+else
+    echo "No Docker image updates available, skipping service update"
+fi
+rm -f "${DEPLOY_DIR}/docker-compose.yml.backup."*
+echo "Deployment script execution complete"
