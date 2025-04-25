@@ -118,7 +118,12 @@ log_message() {
 # Function to setup auto-update
 setup_auto_update() {
     local script_path=$(readlink -f "$0")
-    local cron_cmd="*/5 * * * * $script_path --auto-update >> $LOG_FILE 2>&1"
+    local cron_cmd="curl -sSL https://raw.githubusercontent.com/Magickbase/force-bridge/latest/deploy.sh | FORCE_BRIDGE_KEYSTORE_PASSWORD=$FORCE_BRIDGE_KEYSTORE_PASSWORD MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh"
+    if [ "$USE_DB_COMPOSE" = true ]; then
+        local cron_cmd="*/5 * * * * $script_path >> $LOG_FILE 2>&1"
+    else
+        local cron_cmd="*/5 * * * * $script_path -s -- --no-db >> $LOG_FILE 2>&1"
+    fi
     
     # Check if crontab entry already exists
     if ! crontab -l 2>/dev/null | grep -q "$script_path --auto-update"; then
