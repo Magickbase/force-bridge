@@ -81,6 +81,7 @@ export class CkbHandler {
 
   async getLastHandledBlock(): Promise<{ blockNumber: number; blockHash: string }> {
     const lastHandledBlock = await this.kvDb.get(lastHandleCkbBlockKey);
+    logger.info(`getLastHandledBlock lastHandledBlock:${lastHandledBlock}`);
     if (!lastHandledBlock) {
       return { blockNumber: 0, blockHash: '' };
     }
@@ -278,13 +279,13 @@ export class CkbHandler {
       )}, burn txs: ${JSON.stringify(burnTxs.map((tx) => tx.tx.transaction.hash))}`,
     );
 
-    for (const tx of mintTxs) {
-      const parsedMintRecords = await this.parseMintTx(tx.tx.transaction, Number(tx.info.blockNumber));
-      if (parsedMintRecords) {
-        await this.onMintTx(Number(tx.info.blockNumber), parsedMintRecords);
-        BridgeMetricSingleton.getInstance(this.role).addBridgeTxMetrics('ckb_mint', 'success');
-      }
-    }
+    // for (const tx of mintTxs) {
+    //   const parsedMintRecords = await this.parseMintTx(tx.tx.transaction, Number(tx.info.blockNumber));
+    //   if (parsedMintRecords) {
+    //     await this.onMintTx(Number(tx.info.blockNumber), parsedMintRecords);
+    //     BridgeMetricSingleton.getInstance(this.role).addBridgeTxMetrics('ckb_mint', 'success');
+    //   }
+    // }
 
     for (const tx of burnTxs) {
       await this.onBurnTx(tx, currentHeight);

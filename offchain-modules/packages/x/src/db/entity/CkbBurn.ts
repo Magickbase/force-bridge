@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { TxConfirmStatus } from './EthLock';
 
-@Entity()
+@Entity({ name: 'ckb_burn' })
 export class CkbBurn {
   @PrimaryColumn()
   ckbTxHash: string;

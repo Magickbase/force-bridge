@@ -149,7 +149,7 @@ export class EthHandler {
   async handleLog(log: Log, currentHeight: number): Promise<void> {
     const parsedLog = await this.ethChain.iface.parseLog(log);
     if (parsedLog.name === 'Locked') {
-      await this.onLockLogs(log, parsedLog, currentHeight);
+      // await this.onLockLogs(log, parsedLog, currentHeight);
     } else if (parsedLog.name === 'Unlocked') {
       await this.onUnlockLogs(log, parsedLog);
     } else {

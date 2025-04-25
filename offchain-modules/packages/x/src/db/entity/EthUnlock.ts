@@ -3,7 +3,7 @@ import { dbTxStatus } from './CkbMint';
 
 export type EthUnlockStatus = dbTxStatus;
 
-@Entity()
+@Entity({ name: 'eth_unlock' })
 export class EthUnlock {
   @PrimaryColumn()
   ckbTxHash: string;
@@ -31,7 +31,7 @@ export class EthUnlock {
   updatedAt: string;
 }
 
-@Entity()
+@Entity({ name: 'collector_eth_unlock' })
 export class CollectorEthUnlock extends EthUnlock {
   @Column({ default: 'todo' })
   status: EthUnlockStatus;

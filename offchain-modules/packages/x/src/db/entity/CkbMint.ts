@@ -3,7 +3,7 @@ import { Entity, Column, CreateDateColumn, UpdateDateColumn, Index, PrimaryColum
 export type dbTxStatus = 'todo' | 'pending' | 'success' | 'error' | 'manual-review';
 export type CkbMintStatus = dbTxStatus;
 
-@Entity()
+@Entity({ name: 'ckb_mint' })
 export class CkbMint {
   @PrimaryColumn()
   id: string;
@@ -38,7 +38,7 @@ export class CkbMint {
   updatedAt: string;
 }
 
-@Entity()
+@Entity({ name: 'collector_ckb_mint' })
 export class CollectorCkbMint extends CkbMint {
   @Column({ default: 'todo' })
   status: CkbMintStatus;

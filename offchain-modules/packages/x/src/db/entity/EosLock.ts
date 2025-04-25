@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'eos_lock' })
 export class EosLock {
   @PrimaryColumn()
   id: string; //txHash + actionIndex

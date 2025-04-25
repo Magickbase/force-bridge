@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColum
 
 export type TxConfirmStatus = 'unconfirmed' | 'confirmed';
 
-@Entity()
+@Entity({ name: 'eth_lock' })
 export class EthLock {
   @PrimaryColumn()
   uniqueId: string;

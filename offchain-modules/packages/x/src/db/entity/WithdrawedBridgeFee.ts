@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'withdrawed_bridge_fee' })
 export class WithdrawedBridgeFee {
   @PrimaryColumn()
   txHash: string;

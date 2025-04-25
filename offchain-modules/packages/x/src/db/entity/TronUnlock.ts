@@ -3,7 +3,7 @@ import { dbTxStatus } from './CkbMint';
 
 export type TronUnlockStatus = dbTxStatus;
 
-@Entity()
+@Entity({ name: 'tron_unlock' })
 export class TronUnlock {
   @PrimaryColumn()
   ckbTxHash: string;

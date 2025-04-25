@@ -8,7 +8,7 @@ import { collectSignaturesParams, getPendingTxParams } from '@force-bridge/x/dis
 import { ServerSingleton } from '@force-bridge/x/dist/server/serverSingleton';
 import { getDBConnection, privateKeyToCkbAddress, privateKeyToEthAddress } from '@force-bridge/x/dist/utils';
 import { logger } from '@force-bridge/x/dist/utils/logger';
-import { ForceBridgeAbi } from '@force-bridge/x/dist/xchain/eth/abi';
+import { ForceBridgeAbi } from '@force-bridge/x/src/xchain/eth/abi';
 import bodyParser from 'body-parser';
 import { ethers } from 'ethers';
 import { JSONRPCServer } from 'json-rpc-2.0';

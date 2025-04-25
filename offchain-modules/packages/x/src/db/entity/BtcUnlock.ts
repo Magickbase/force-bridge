@@ -3,7 +3,7 @@ import { dbTxStatus } from './CkbMint';
 
 export type BtcUnlockStatus = dbTxStatus;
 
-@Entity()
+@Entity({ name: 'btc_unlock' })
 export class BtcUnlock {
   @PrimaryColumn()
   ckbTxHash: string;

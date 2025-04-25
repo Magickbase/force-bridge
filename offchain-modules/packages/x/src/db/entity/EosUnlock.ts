@@ -3,7 +3,7 @@ import { dbTxStatus } from './CkbMint';
 
 export type EosUnlockStatus = dbTxStatus;
 
-@Entity()
+@Entity({ name: 'eos_unlock' })
 export class EosUnlock {
   @PrimaryColumn()
   ckbTxHash: string;

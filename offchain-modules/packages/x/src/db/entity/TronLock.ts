@@ -10,7 +10,7 @@ import {
 
 export type TronAssetType = 'trx' | 'trc10' | 'trc20';
 
-@Entity()
+@Entity({ name: 'tron_lock' })
 @Index(['txHash', 'txIndex'], { unique: true })
 export class TronLock {
   @PrimaryGeneratedColumn()
